@@ -1,18 +1,15 @@
 {
-  "name": "03-bases-node",
+  "name": "04-todo",
   "version": "1.0.0",
-  "description": "Prueba de proyecto 1",
-  "main": "app.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Juan Camilo Peña Vahos",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "colors": "^1.3.3",
     "yargs": "^12.0.5"
-  },
-  "devDependencies": {
-    "nodemon": "^1.18.9"
   }
 }
