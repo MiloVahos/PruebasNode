@@ -1,3 +1,4 @@
+require('./config/config');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -25,6 +26,6 @@ app.post('/usuario/:id', function(req,res) {
   
 });
 
-app.listen(3000, () => {
-  console.log('Escuchando puerto', 3000);
+app.listen(process.env.PORT, () => {
+  console.log('Escuchando puerto', process.env.PORT);
 });
