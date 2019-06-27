@@ -1,5 +1,8 @@
 require('./config/config');
+
 const express = require('express');
+const mongoose = require('mongoose');
+
 const app = express();
 const bodyParser = require('body-parser');
 
@@ -7,24 +10,13 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get('/usuario', function(req,res) {
-  res.json('Get usuario');
+app.use(require('./routes/usuario'));
+
+mongoose.connect('mongodb://localhost:27017/cafe', (err, resp) => {
+  if ( err ) throw err;
+  console.log('Base de datos ONLINE');
 });
 
-app.post('/usuario/:id', function(req,res) {
-  let id = req.params.id;
-  let body = req.body;
-
-  if ( body.Nombre === undefined ) {
-    res.status(400).json({
-      ok: false,
-      mensaje: 'El nombre es necesario'
-    })
-  } else {
-    res.json({id, body});
-  }
-  
-});
 
 app.listen(process.env.PORT, () => {
   console.log('Escuchando puerto', process.env.PORT);
