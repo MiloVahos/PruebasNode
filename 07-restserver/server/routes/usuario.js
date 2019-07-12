@@ -1,6 +1,6 @@
 const express = require('express');
 
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 
 const _ = require('underscore');
 
@@ -14,14 +14,17 @@ app.get('/usuario', function(req,res) {
   let limite = req.query.limite || 5;
   limite = Number(limite);
 
-  Usuario.find({  }).skip(desde).limit(limite).exec( (err, usuarios) => {
+  Usuario.find({ estado: true }, 'nombre email').skip(desde).limit(limite).exec( (err, usuarios) => {
     if (err) {
       return res.status(400).json({ ok: false, err });
     }
-    res.json({
-      ok: true,
-      usuarios
-    })
+    Usuario.count({ estado: true }, (err, conteo) => {
+      res.json({
+        ok: true,
+        usuarios,
+        conteo
+      })
+    });
   });
 });
 
@@ -30,7 +33,8 @@ app.post('/usuario', function(req,res) {
   let usuario = new Usuario({
     nombre: body.nombre,
     email: body.email,
-    password: bcrypt.hashSync(body.password,10),
+    //password: bcrypt.hashSync(body.password,10),
+    password: body.password,
     role: body.role
   });
 
@@ -59,8 +63,26 @@ app.put('/usuario/:id', function(req, res) {
 
 });
 
-app.delete('/usuario', function(req, res) {
-  req.json('Delete usuario');
+app.delete('/usuario/:id', function(req, res) {
+  let id = req.params.id;
+  
+  //Usuario.findByIdAndRemove(id, ( err, usuarioBorrado ) => {
+
+  let cambiaEstado = {
+    estado: false
+  }
+  Usuario.findByIdAndUpdate( id, cambiaEstado, { new: true }, ( err, usuarioBorrado ) => {
+    if (err) {
+      return res.status(400).json({ ok: false, err})
+    }
+    if( usuarioBorrado == null ){
+      return res.status(400).json({ ok: false, err: { message: 'Usuario no encontrado' } })
+    }
+    res.json({
+      ok: true,
+      usuario: usuarioBorrado
+    })
+  })
 });
 
 module.exports = app;
