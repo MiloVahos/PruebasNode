@@ -17,7 +17,7 @@ app.use(require('./routes/index'));
 app.use(express.static( path.resolve(__dirname ,'../public' )));
 
 mongoose.connect('mongodb://localhost:27017/cafe', 
-                  { useNewUrlParser: true, useCreateIndex: true },
+                  { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false },
                   (err, resp) => {
   if ( err ) throw err;
   console.log('Base de datos ONLINE');

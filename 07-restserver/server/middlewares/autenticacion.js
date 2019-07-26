@@ -24,10 +24,9 @@ let verificaToken = ( req, res, next ) => {
 };
 
 
-let verificAdminRole = ( req, res, next ) => {
-
+let verificaAdminRole = ( req, res, next ) => {
   let usuario = req.usuario;
-  if( usuario.rol === "ADMIN_ROLE" ) {
+  if( usuario.role === "ADMIN_ROLE" ) {
     next();
   } else {
     return res.status(401).json({
@@ -40,4 +39,4 @@ let verificAdminRole = ( req, res, next ) => {
 
 }
 
-module.exports = { verificaToken, verificAdminRole };
+module.exports = { verificaToken, verificaAdminRole };

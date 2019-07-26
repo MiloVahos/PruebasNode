@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
 const Usuario = require('../models/usuario');
-const { verificaToken, verificAdminRole } = require('../middlewares/autenticacion');
+const { verificaToken, verificaAdminRole } = require('../middlewares/autenticacion');
 const app = express();
 
 app.get('/usuario', verificaToken, (req,res) => {
@@ -26,7 +26,7 @@ app.get('/usuario', verificaToken, (req,res) => {
   });
 });
 
-app.post('/usuario', [verificaToken, verificAdminRole], function(req,res) {
+app.post('/usuario', [verificaToken, verificaAdminRole], function(req,res) {
   let body = req.body;
   let usuario = new Usuario({
     nombre: body.nombre,
