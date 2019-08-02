@@ -22,7 +22,19 @@ app.get('/productos', verificaToken, (req, res) => {
 });
 
 app.get('/productos/:id', verificaToken, (req, res) => {
-
+  let id = req.params.id;
+  Producto.findById(id)
+          .populate('usuario', 'nombre email')
+          .populate('categoria', 'descripcion')
+          .exec((err, productoDB) => {
+            if(err) {
+              return res.status(500).json({ ok: false, err });
+            }
+            if(!productoDB) {
+              return res.status(400).json({ ok: false, err: { message: 'Producto no existe' }});
+            }
+            res.json({ ok: true, producto: productoDB })
+  });
 });
 
 app.post('/productos', verificaToken, (req, res) => {
@@ -68,7 +80,36 @@ app.put('/productos/:id', verificaToken, (req, res) => {
 });
 
 app.delete('/productos/:id', verificaToken, (req, res) => {
+  let id = req.params.id;
+  Producto.findById(id, (err, productoDB) => {
+    if(err) {
+      return res.status(500).json({ ok: false, err });
+    }
+    if(!productoDB) {
+      return res.status(400).json({ ok: false, err: { message: 'Producto no existe' }});
+    }
+    productoDB.disponible = false;
+    productoDB.save( (err, productoBorrado) => {
+      if(err) {
+        return res.status(500).json({ ok: false, err });
+      }     
+      res.json({ ok: true, producto: productoBorrado, mensaje: 'Producto borrado' });
+    });
+  });
+});
 
+// Buscar productos
+app.get('/productos/buscar/:termino', verificaToken, (req, res) => {
+  let termino = req.params.termino;
+  let regex = new RegExp(termino, 'i');
+  Producto.find({ nombre: regex })
+          .populate('categoria', 'nombre')
+          .exec((err, productos) => {
+            if(err) {
+              return res.status(500).json({ ok: false, err });
+            }
+            res.json({ ok: true, productos: productos });
+          });
 });
 
 
